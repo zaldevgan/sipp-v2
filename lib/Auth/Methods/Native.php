@@ -23,7 +23,7 @@ class Native extends Contract
      */
     protected function memberAuthenticate()
     {
-        $this->fetchRequest(['memberID', 'memberPassWord']);
+        $this->fetchRequest(['memberID', 'memberPassWord', 'memberType']);
         $this->type = parent::MEMBER_LOGIN;
 
         /**

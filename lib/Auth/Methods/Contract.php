@@ -66,7 +66,7 @@ abstract class Contract implements Countable
 
     public function fetchRequest(array $keys)
     {
-        $map = ['username','password'];
+        $map = ['username','password', 'membertype'];
         foreach($keys as $order => $key) {
             $this->{$map[$order]} = $_POST[$key]??'';
         }

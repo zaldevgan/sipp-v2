@@ -39,6 +39,7 @@ class member_logon
     public $ip_check = false;
     public $ip_allowed = array();
     public $errors = '';
+    protected $membertype = '';
 
 
     /**
@@ -47,12 +48,14 @@ class member_logon
      * @param   string  $str_username
      * @param   string  $str_password
      * @param   string  $str_auth_method
+     * @param   string  $str_membertype
      * @return  void
      */
-    public function __construct($str_username, $str_password, $str_auth_method = 'native') {
+    public function __construct($str_username, $str_password, $str_auth_method = 'native', $str_membertype) {
         $this->username = trim($str_username);
         $this->password = trim($str_password);
         $this->auth_method = $str_auth_method;
+        $this->membertype = trim($str_membertype);
     }
 
 

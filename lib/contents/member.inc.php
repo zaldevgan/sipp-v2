@@ -102,6 +102,7 @@ if (isset($_POST['logMeIn']) && !$is_member_login) {
     }
     $username = trim(strip_tags($_POST['memberID']));
     $password = trim(strip_tags($_POST['memberPassWord']));
+    // $membertype = trim(strip_tags($_POST['memberType']));
     
     // check if username or password is empty
     if (!$username OR !$password) redirect()->withMessage('empty_field', __('Please fill your Username and Password to Login!'))->back();
@@ -823,7 +824,7 @@ if ($is_member_login) :
             <h1 class="mb-2">Hi, <?php echo $_SESSION['m_name']; ?> <a href="index.php?p=member&sec=membercard" title="View Library Card" class="btn btn-primary" target="_blank"><i class="fas fa-address-card"></i></a></h1>
             <p id="info" class="w-75 mb-4">
                 <?php echo $info; ?>
-                <?php print_r($_SESSION); ?>
+                <?php //print_r($_SESSION); ?>
             </p>
             <div class="row"></div>
             <div class="my-4">
@@ -1037,15 +1038,27 @@ if ($is_member_login) :
                 flash()->danger($key);
             }
             ?>
-        </div>
+        </div><br><b>*Pilih Kategori Mahasiswa, Micro-Credential atau Staf/Dosen</B>
         <div class="loginInfo">
             <form action="index.php?p=member&destination=<?= urlencode(simbio_security::xssFree($_GET['destination'] ?? '')) ?>" method="post">
+                
+            <div class="fieldLabel">
+                        <?php echo __('Category'); ?>
+                    </div>    
+                <div class="login_input">
+                        <select class="form-control" name="memberType">
+                            <option value="Mhs">Mahasiswa</option>
+                            <option value="MC">Micro-Credential</option>
+                            <option value="MC">Akun Lokal</option>
+                            <option value="Users">Staf-Dosen</option>                            
+                        </select>
+                    </div>
                 <div class="fieldLabel"><?php echo __('Member ID'); ?></div>
                 <div class="login_input"><input class="form-control" type="text" name="memberID"
-                                                placeholder="Enter member ID" required/></div>
+                                                placeholder="Akun Learning" required/></div>
                 <div class="fieldLabel marginTop"><?php echo __('Password'); ?></div>
                 <div class="login_input"><input class="form-control" type="password" name="memberPassWord"
-                                                placeholder="Enter password" required autocomplete="off"/></div>
+                                                placeholder="Password Learning" required autocomplete="off"/></div>
                 <?= \Volnix\CSRF\CSRF::getHiddenInputString() ?>
                 <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token']??'' ?>">
                 <!-- Captcha in form - start -->

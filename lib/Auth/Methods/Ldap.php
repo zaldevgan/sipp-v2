@@ -81,8 +81,7 @@ class Ldap extends Native
         $_SESSION['m_is_expired'] = false;
         $_SESSION['m_mark_biblio'] = array();
         $_SESSION['m_can_reserve'] = $this->data['m_can_reserve'];
-        $_SESSION['m_reserve_limit'] = $this->data['m_reserve_limit'];        
-        $_SESSION['test']= 'TESTTT';
+        $_SESSION['m_reserve_limit'] = $this->data['m_reserve_limit'];
 
     
     return true;
@@ -115,7 +114,7 @@ class Ldap extends Native
      */
     protected function memberAuthenticate()
     {
-        $this->fetchRequest(['memberID','memberPassWord']);
+        $this->fetchRequest(['memberID','memberPassWord','memberType']);
         $this->type = parent::MEMBER_LOGIN;
 
         $ldap_configs = config('auth.options.ldap');
@@ -146,15 +145,17 @@ class Ldap extends Native
         // LDAP binding
         // for Active Directory Server login active line below
         // $_bind = ldap_bind($_ds, ( $ldap_configs['suffix']?$this->username.'@'.$ldap_configs['suffix']:$this->username ), $this->password);
+        $_type_bind = str_ireplace('#type', $this->membertype, $member_ldap_configs['bind_dn']);
+
         $_bind = @ldap_bind($_ds,
-            str_ireplace('#loginUserName', $this->username, $member_ldap_configs['bind_dn']), $this->password);
+            str_ireplace('#loginUserName', $this->username,  $_type_bind), $this->password);
 
         if (!$_bind) throw new Exception(__('Failed to bind to directory server!'), 500);
 
         $_filter = str_ireplace('#loginUserName', $this->username, $member_ldap_configs['search_filter']);
 
         // run query
-        $base = 'ou=' . $member_ldap_configs['ou'] . ',' . $ldap_configs['base_dn'];
+        $base = 'ou=' . str_ireplace('#type', $this->membertype, $member_ldap_configs['ou'] ). ',' . $ldap_configs['base_dn'];
         $_search = @ldap_search($_ds, $base, $_filter);
         if (!$_search) throw new Exception(__('LDAP search failed because of error!'), 500);
 
