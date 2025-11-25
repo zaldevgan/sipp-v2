@@ -78,6 +78,34 @@ class Ldap extends Native
             WHERE m.member_id=?', [$memberId]);
 
         $this->data = $member->first()??[];
+        $_SESSION['m_is_expired'] = false;
+        $_SESSION['m_mark_biblio'] = array();
+        $_SESSION['m_can_reserve'] = $this->data['m_can_reserve'];
+        $_SESSION['m_reserve_limit'] = $this->data['m_reserve_limit'];        
+        $_SESSION['test']= 'TESTTT';
+
+    
+    return true;
+        // set bookmark
+        $bookmarkStatement = $obj_db->query('SELECT `biblio_id` FROM `biblio_mark` WHERE `member_id` = \'' . $obj_db->escape_string($this->user_info['member_id']) . '\'');
+
+        if ($bookmarkStatement)
+        {
+            $_SESSION['bookmark'] = [];
+            while ($bookmark = $bookmarkStatement->fetch_row()) {
+                $_SESSION['bookmark'][$bookmark[0]] = $bookmark[0];
+            }
+        }
+
+        // check member expiry date
+        require_once SIMBIO.'simbio_UTILS/simbio_date.inc.php';
+        $_curr_date = date('Y-m-d');
+        if (simbio_date::compareDates($this->user_info['expire_date'], $_curr_date) == $_curr_date) {
+            $_SESSION['m_is_expired'] = true;
+        }
+
+
+        
     }
 
     /**

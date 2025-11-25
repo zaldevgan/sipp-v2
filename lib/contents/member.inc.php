@@ -82,11 +82,16 @@ if (isset($_GET['logout']) && $_GET['logout'] == '1') {
     writeLog('member', $_SESSION['m_email'], 'Login', $_SESSION['m_name'] . ' Log Out from address ' . ip());
     // completely destroy session cookie
     simbio_security::destroySessionCookie(null, MEMBER_COOKIES_NAME, SWB, false);
-    redirect()->withHeader([
-        ['Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0'],
-        ['Expires', 'Sat, 26 Jul 1997 05:00:00 GMT'],
-        ['Pragma', 'no-cache']
-    ])->to('?p=member');
+    // redirect()->withHeader([
+    //     ['Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0'],
+    //     ['Expires', 'Sat, 26 Jul 1997 05:00:00 GMT'],
+    //     ['Pragma', 'no-cache']
+    // ])->to('?p=member');
+    header('Location: index.php?p=member');
+    header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+    header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+    header('Pragma: no-cache');
+    exit();
 }
 
 // if there is member login action
@@ -806,7 +811,8 @@ if ($is_member_login) :
                     ?>
                     <i class="fas fa-lock mr-2 text-red"></i>Member status pending
                 <?php
-                //elseif ($_SESSION['m_is_expired']) :
+                elseif ($_SESSION['m_is_expired']) :                   
+
                     $info = 'Your member status is expired state! Please contact system administrator for more detail.';
                     ?>
                     <i class="far fa-calendar-times mr-2 text-red"></i>Member expired
