@@ -245,6 +245,12 @@ class member_logon
         $_SESSION['m_reserve_limit'] = $this->user_info['reserve_limit'];
         $_SESSION['m_image'] = $this->user_info['member_image'];
 
+        error_log("Session m_is_expired: " . ($_SESSION['m_is_expired'] ? 'true' : 'false'));
+    error_log("Session m_mark_biblio count: " . count($_SESSION['m_mark_biblio']));
+    error_log("Session bookmark count: " . count($_SESSION['bookmark']));
+    
+    return true;
+
         // set bookmark
         $bookmarkStatement = $obj_db->query('SELECT `biblio_id` FROM `biblio_mark` WHERE `member_id` = \'' . $obj_db->escape_string($this->user_info['member_id']) . '\'');
 
