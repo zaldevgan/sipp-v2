@@ -46,7 +46,7 @@ class AddUIDColumn extends \SLiMS\Migration\Migration
     function down()
     {
         Schema::table('read_counter', function(Blueprint $table){
-            $table->drop('uid');
+            //$table->drop('uid');
         });
     }
 }

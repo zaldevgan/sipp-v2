@@ -33,6 +33,7 @@ class CreateReadCounterTable extends \SLiMS\Migration\Migration
      */
     function up()
     {
+ 
         Schema::create('read_counter', function(Blueprint $table){
             $table->engine = 'MyISAM';
             $table->charset = 'utf8mb4';
@@ -51,6 +52,6 @@ class CreateReadCounterTable extends \SLiMS\Migration\Migration
      */
     function down()
     {
-        Schema::drop('read_counter');
+        //Schema::drop('read_counter');
     }
 }

@@ -44,8 +44,18 @@ if (isset($_POST['enable'])) {
 
             // run migration if available
             if ($plugin->migration->is_exist) {
+                
+                $db = \SLiMS\DB::getInstance('mysqli');
+                $tableExists = $db->query("SHOW TABLES LIKE 'read_counter'")->num_rows > 0;
+
+                    if ($tableExists) {
+                        // Tabel sudah ada, tidak perlu create ulang
+                    $options = ['version' => $plugin->version, 'migrated' => 'existing'];
+                    } else {
+
                 $options[Plugins::DATABASE_VERSION] = Runner::path($plugin->path)->setVersion($plugin->migration->{Plugins::DATABASE_VERSION})->runUp();
-                $query->bindValue(':options', json_encode($options));
+                
+                    }$query->bindValue(':options', json_encode($options));
             } else {
                 $query->bindValue(':options', null);
             }
