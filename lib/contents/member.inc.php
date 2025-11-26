@@ -49,12 +49,26 @@ do_checkIP('opac-member');
 require SIMBIO . 'simbio_DB/simbio_dbop.inc.php';
 
 // create logon class instance
+//added member2 for native auth method
+if (isset($_POST['memberType'])){
+    $membertype = trim(strip_tags($_POST['memberType']));
+} else {
+    $membertype = '';
+}
+if ($membertype === 'MC'){
+    $logon = Validator::use(
+        config(
+        'auth.methods.' . config('auth.sections.member2'),
+        \SLiMS\Auth\Methods\Native::class
+        )
+        );
+} else {
 $logon = Validator::use(
     config(
     'auth.methods.' . config('auth.sections.member'),
     \SLiMS\Auth\Methods\Native::class
     )
-);
+    );}
 
 $logon->getHook();
 
@@ -102,7 +116,7 @@ if (isset($_POST['logMeIn']) && !$is_member_login) {
     }
     $username = trim(strip_tags($_POST['memberID']));
     $password = trim(strip_tags($_POST['memberPassWord']));
-    // $membertype = trim(strip_tags($_POST['memberType']));
+    $membertype = trim(strip_tags($_POST['memberType']));
     
     // check if username or password is empty
     if (!$username OR !$password) redirect()->withMessage('empty_field', __('Please fill your Username and Password to Login!'))->back();
